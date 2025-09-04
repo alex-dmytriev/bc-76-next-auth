@@ -1,4 +1,5 @@
-import TagsMenu from "../TagsMenu/TagsMenu";
+"use client";
+import AuthNavigation from "../AuthNavigation/AuthNavigation";
 import css from "./Header.module.css";
 import Link from "next/link";
 
@@ -13,9 +14,7 @@ const Header = () => {
           <li className={css.home}>
             <Link href="/">Home</Link>
           </li>
-          <li>
-            <TagsMenu />
-          </li>
+          <AuthNavigation />
         </ul>
       </nav>
     </header>
