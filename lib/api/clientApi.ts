@@ -1,5 +1,6 @@
 import { Credentials, User } from "@/types/user";
 import { nextServer } from "./api";
+import { NewNote, Note } from "@/types/note";
 
 export const register = async (credentials: Credentials) => {
   const { data } = await nextServer.post<User>("/auth/register", credentials);
@@ -25,4 +26,49 @@ export const checkSession = async () => {
 export const getMe = async () => {
   const { data } = await nextServer.get<User>("/users/me");
   return data;
+};
+
+interface FetchNotesProps {
+  notes: Note[];
+  totalPages: number;
+}
+
+export const fetchNotes = async (
+  search: string,
+  page: number,
+  tag?: string | null
+): Promise<FetchNotesProps> => {
+  const params = {
+    params: {
+      page,
+      search,
+      perPage: 9,
+      tag,
+    },
+  };
+
+  const fetchNotesResponse = await nextServer.get<FetchNotesProps>(
+    "/notes",
+    params
+  );
+
+  return fetchNotesResponse.data;
+};
+
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const response = await nextServer.get<Note>(`notes/${id}`);
+
+  return response.data;
+};
+
+export const createNote = async (newTask: NewNote): Promise<Note> => {
+  const createNoteResponse = await nextServer.post<Note>("/notes", newTask);
+  console.log(createNoteResponse.data);
+  return createNoteResponse.data;
+};
+
+//* === DELETE === *
+export const deleteNote = async (taskID: string): Promise<Note> => {
+  const deleteNoteResponse = await nextServer.delete<Note>(`notes/${taskID}`);
+  return deleteNoteResponse.data;
 };
